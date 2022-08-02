@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "version": "0.0.1",
+  "name": "tab-group-manager",
+  "description": "tab group manager",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.bundle.js"
+  },
+  "permissions": [
+    "storage",
+    "webNavigation",
+    "tabs",
+    "tabGroups"
+  ]
+}
