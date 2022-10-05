@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   FormControlLabel,
   InputLabel,
@@ -12,42 +13,57 @@ import {
   convertChanges,
   defaultSettings,
   getSyncSettings,
+  setSettings,
   setSyncSettings,
   Settings,
 } from "../settings";
 
-const useSettingStatus = (): [Settings, (item: Partial<Settings>) => void, () => void] => {
+// const useSettingStatus = (): [Settings, (item: Partial<Settings>) => void, () => void] => {
+//   const [settings, setSettings] = useState(defaultSettings);
+//   const setAllSettings = async (item: Partial<Settings>) => {
+//     setSettings({ ...settings, ...item });
+//     await setSyncSettings(item);
+//   };
+//   getSyncSettings().then((syncSettings) => setSettings({...settings, ...syncSettings}));
+//   useEffect(() => {
+//     console.log(settings)
+//     chrome.storage.onChanged.addListener((changes, areaName) => {
+//       if (areaName === "sync") {
+//         const changeSettings = convertChanges(changes);
+//         setSettings({...settings, ...changeSettings});
+//       }
+//     });
+//   }, []);
+//   const clearSettings = () => {
+//     chrome.storage.sync.clear()
+//     setSettings(defaultSettings);
+//   }
+//   return [settings, setAllSettings, clearSettings];
+// };
+
+const SettingsPage = () => {
+  console.log("setting")
+  // const [settings, setSettings, clearSettings] = useSettingStatus();
   const [settings, setSettings] = useState(defaultSettings);
-  const setAllSettings = async (item: Partial<Settings>) => {
-    setSettings({ ...settings, ...item });
-    await setSyncSettings(item);
-  };
+  const setSetting = (item: Partial<Settings>) => {
+    setSettings({...settings, ...item});
+  }
   getSyncSettings().then((syncSettings) => setSettings({...settings, ...syncSettings}));
-  useEffect(() => {
-    console.log(settings)
-    chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === "sync") {
-        const changeSettings = convertChanges(changes);
-        setSettings({...settings, ...changeSettings});
-      }
-    });
-  }, []);
+  const saveSettings = () => {
+      console.log("saved ", settings)
+      setSyncSettings(settings);
+  }
   const clearSettings = () => {
     chrome.storage.sync.clear()
     setSettings(defaultSettings);
   }
-  return [settings, setAllSettings, clearSettings];
-};
-const SettingsPage = () => {
-  console.log("setting")
-  const [settings, setSettings, clearSettings] = useSettingStatus();
   return (
     <div style={{display: "flex", flexDirection: "column"}}>
       <TextField
         label="threshold"
         type="number"
         value={settings.threshold}
-        onChange={(e) => setSettings({ threshold: parseFloat(e.target.value) })}
+        onChange={(e) => setSetting({ threshold: parseFloat(e.target.value) })}
         margin="normal"
       />
       <TextField
@@ -55,7 +71,7 @@ const SettingsPage = () => {
         type="number"
         value={settings.minTabsInGroup}
         onChange={(e) =>
-          setSettings({ minTabsInGroup: parseInt(e.target.value) })
+          setSetting({ minTabsInGroup: parseInt(e.target.value) })
         }
         margin="normal"
       />
@@ -63,7 +79,7 @@ const SettingsPage = () => {
       <Select
         value={settings.autoGroup}
         onChange={(e) =>
-          setSettings({ autoGroup: e.target.value as Settings["autoGroup"] })
+          setSetting({ autoGroup: e.target.value as Settings["autoGroup"] })
         }
       >
         <MenuItem value="auto">auto</MenuItem>
@@ -74,7 +90,7 @@ const SettingsPage = () => {
         control={
           <Checkbox
             checked={settings.useTitle}
-            onChange={(e) => setSettings({ useTitle: e.target.checked })}
+            onChange={(e) => setSetting({ useTitle: e.target.checked })}
           />
         }
         label="Use title"
@@ -83,7 +99,7 @@ const SettingsPage = () => {
         control={
           <Checkbox
             checked={settings.useUrl}
-            onChange={(e) => setSettings({ useUrl: e.target.checked })}
+            onChange={(e) => setSetting({ useUrl: e.target.checked })}
           />
         }
         label="Use url"
@@ -93,7 +109,7 @@ const SettingsPage = () => {
           <Checkbox
             checked={settings.collapseOtherGroup}
             onChange={(e) =>
-              setSettings({ collapseOtherGroup: e.target.checked })
+              setSetting({ collapseOtherGroup: e.target.checked })
             }
           />
         }
@@ -103,11 +119,13 @@ const SettingsPage = () => {
         control={
           <Checkbox
             checked={settings.autoAlignTabs}
-            onChange={(e) => setSettings({ autoAlignTabs: e.target.checked })}
+            onChange={(e) => setSetting({ autoAlignTabs: e.target.checked })}
           />
         }
         label="Auto align tabs"
       />
+      <Button onClick={saveSettings}>SAVE</Button>
+      <Button onClick={clearSettings}>CLEAR</Button>
     </div>
   );
 };

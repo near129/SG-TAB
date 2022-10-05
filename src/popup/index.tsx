@@ -28,6 +28,7 @@ const alignTabs = async () => {
   sendMessage({ type: MessageType.ALIGN_TABS });
 };
 const Popup = () => {
+  console.log("main")
   const [isSettings, setSettings] = useState(false);
   const mainToolbar = (
     <Toolbar sx={{ justifyContent: "space-between" }}>
