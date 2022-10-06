@@ -1,3 +1,4 @@
+import { STOPWORDS } from "./stopwords";
 const TAB_SUSPENDER_PATTERN =
   /chrome-extension:\/\/.*\/suspended.html#.*&url=(.*)$/;
 export const preprocessUrl = (url: string) => {
@@ -11,10 +12,10 @@ export const preprocessUrl = (url: string) => {
 const SEGMENTER = new Intl.Segmenter([], { granularity: "word" });
 
 export const preprocessText = (document: string) => {
-  // TODO: stopword
   return Array.from(SEGMENTER.segment(document))
     .filter((seg) => seg.isWordLike)
-    .map((seg) => seg.segment.toLowerCase().normalize("NFKC"));
+    .map((seg) => seg.segment.toLowerCase().normalize("NFKC"))
+    .filter((word) => !STOPWORDS.has(word));
 };
 
 export type TabPreprocessOption = {

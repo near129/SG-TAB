@@ -46,12 +46,16 @@ const debugCluster = (c: Cluster, tabs: chrome.tabs.Tab[]) => {
   };
   visit(c, Math.floor(c.height * 30) + 2);
 };
-const clustering = (x: number[][], option: ClusteringOption, tabs: chrome.tabs.Tab[]) => {
+const clustering = (
+  x: number[][],
+  option: ClusteringOption,
+  tabs: chrome.tabs.Tab[]
+) => {
   const c = agnes(x, {
     method: "average",
     distanceFunction: reverseCosineSimilarity,
   });
-  console.log(c)
+  console.log(c);
   debugCluster(c, tabs);
   const result: Clustring[] = [];
   // c.cut(option.threshold).forEach((root, idx) => {

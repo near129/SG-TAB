@@ -1,35 +1,37 @@
 export type Settings = {
-  excludeOwnGroup: boolean;
+  // excludeOwnGroup: boolean;
   threshold: number;
-  excludeTabUrlRule: RegExp[];
-  autoGroup: "auto" | "manual" | "off";
+  // excludeTabUrlRule: RegExp[];
+  // autoGroup: "auto" | "manual" | "off";
   minTabsInGroup: number;
-  useTitle: boolean;
-  useUrl: boolean;
-  autoAppendTab: boolean;
-  sortTab: "sort" | "clustering" | "groupTab" | "off";
-  collapseOtherGroup: boolean;
-  autoAlignTabs: boolean;
-  stopWords: string[];
+  // useTitle: boolean;
+  // useUrl: boolean;
+  // autoAppendTab: boolean;
+  // sortTab: "sort" | "clustering" | "groupTab" | "off";
+  // collapseOtherGroup: boolean;
+  // autoAlignTabs: boolean;
+  // stopWords: string[];
 };
 
 export const defaultSettings: Settings = {
-  excludeOwnGroup: true,
+  // excludeOwnGroup: true,
   threshold: 0.5,
-  excludeTabUrlRule: [],
-  autoGroup: "manual",
+  // excludeTabUrlRule: [],
+  // autoGroup: "manual",
   minTabsInGroup: 3,
-  useTitle: true,
-  useUrl: true,
-  autoAppendTab: true,
-  sortTab: "clustering",
-  collapseOtherGroup: true,
-  autoAlignTabs: true,
-  stopWords: [],
+  // useTitle: true,
+  // useUrl: true,
+  // autoAppendTab: true,
+  // sortTab: "clustering",
+  // collapseOtherGroup: true,
+  // autoAlignTabs: true,
+  // stopWords: [],
 };
 
-export const getSyncSettings = async () => {
-  const syncSettings = await chrome.storage.sync.get(Object.keys(defaultSettings));
+export const loadSyncSettings = async (): Promise<Partial<Settings>> => {
+  const syncSettings = await chrome.storage.sync.get(
+    Object.keys(defaultSettings)
+  );
   for (const [key, value] of Object.entries(syncSettings)) {
     syncSettings[key] = JSON.parse(value);
   }
@@ -51,9 +53,7 @@ export const setSettings = async (
   return settings;
 };
 
-export const convertChanges = (
-  changes: chrome.storage.StorageChange,
-) => {
+export const convertChanges = (changes: chrome.storage.StorageChange) => {
   const changeSettings: { [key: string]: any } = {};
   for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
     changeSettings[key] = JSON.parse(newValue);
